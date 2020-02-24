@@ -1,0 +1,17 @@
+---
+kind: pipeline
+type: docker
+name: default
+
+steps:
+  - name: test
+    image: alpine
+    commands:
+      - apk add curl bash
+      - sleep 30
+      - ./red-shu.spec.sh
+
+trigger:
+  event:
+    - push
+    - pull_request
