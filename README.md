@@ -50,8 +50,20 @@ ti
 
 Output
 ```
-REDSHU CASE 2020-02-12T16:44:45,203100260+03:00 add.sh 1 should add two numbers
-REDSHU PASS 2020-02-12T16:44:45,209255672+03:00 add.sh 1 
+$ add.spec.sh
+REDSHU CASE 2020-02-24T12:39:01+0300 add.sh 1 should add two numbers
+REDSHU PASS 2020-02-24T12:39:02+0300 add.sh 1
+```
+
+JUnit
+```
+$ add.spec.sh | red-shu-2-junit.sh
+<testsuites name="CI Tests"><testsuite name="add.sh" tests="1" timestamp="2020-02-24T12:39:43+0300" time="0"><testcase name="add.sh should add two numbers"></testcase></testsuite></testsuites>
+```
+
+Run all tests in folder
+```sh
+$ red-shu-exec.sh --junit
 ```
 
 ## Assertions
