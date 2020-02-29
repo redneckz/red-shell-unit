@@ -9,7 +9,6 @@ Simple TDD framework for Shell "with dominoes and bears"
 
 * Tiny
 * _No_ separate API for assertions
-* Cross-platform
 
 Requires Bash v4
 
@@ -71,16 +70,19 @@ $ red-shu-exec.sh --junit
 You can use any commands and bash instructions as assertions for example `grep`, `test` or `diff`.
 All commands with exit code different from zero are treated as assertion errors.
 
+Assertion examples:
 ```sh
+# Result equals to expected string
+[[ "${result}" == 'expected_string' ]]
 # Last command exit code is ok
 exit_code=$?
-[[ $exit_code == 0 ]]
+[[ $exit_code -eq 0 ]]
 # File exists
 [[ -e ./file.txt ]]
-# some-cmd was invoked with --some-option
-mock::called some-cmd '.*--some-option.*'
-# some-cmd was not invoked    
-(! mock::called some-cmd '.*')
+# Output contains the expected line
+echo "${output}" | grep -x 'expected_line' >/dev/null
+# File consists of the expected lines
+diff ./file.txt <(printf '%s\n' 'first line' 'second line' 'third line')
 ```
 
 ## Mocks
@@ -93,7 +95,7 @@ mock yarn
 Mock with custom implementation:
 ```sh
 function yarn() {
-    mock:log yarn "$@"
+    mock::log yarn "$@"
     if [[ "$1" == version ]]; then echo 123; fi
 }
 ```
@@ -103,12 +105,14 @@ Example:
 mock yarn # Mock yarn command
 
 yarn version # Execute mocked command
-yarn install # Execute second time
+yarn install # Execute it second time
 
+# Assertions
 mock::called yarn version # Assert that command was called with particular args
 mock::called yarn '.*' # Assert that command was called with any args (RegExp)
 [[ $(mock::called_times yarn '.*') -eq 2 ]] # How many times it was called
 
+# Snapshot testing is also available
 (mock::snapshot
     yarn version
     yarn install
