@@ -20,7 +20,7 @@ function redshu::exec() {
     find . -name "*.spec.sh" | sh
 }
 
-if [[ -n "${JUNIT}" && "${OSTYPE}" != "darwin"* ]]; then
+if [[ -n "${JUNIT}" ]]; then
     redshu::exec | tee >(red-shu-2-junit.sh > "${JUNIT}")
 else
     redshu::exec
