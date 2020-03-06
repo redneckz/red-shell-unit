@@ -53,6 +53,6 @@ function run() {
     (source "${CMD}")
 }
 
-source <(redshu::isolate_test_cases "${SPEC_SOURCE}")
+source <(red-shu-isolate.sh "${SPEC_SOURCE}")
 
 [[ ${CASE_FAIL_COUNT} -eq 0 ]] # In case of success exit with zero

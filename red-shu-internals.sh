@@ -24,19 +24,3 @@ function redshu::assert() {
         echo "${last_cmd}" >> "${CASE_FAILURES_TEMP}"
     fi
 }
-
-function redshu::isolate_test_cases() {
-    local assertions_trap="trap 'redshu::assert' ERR"
-    local it_regexp='^[ ]*it[ ]?[^;]*$'
-    local ti_regexp='^[ ]*ti[ ]*$'
-
-    while IFS= read -r line; do
-        if [[ "${line}" =~ $it_regexp ]]; then
-            echo "${line}; (${assertions_trap}"
-        elif [[ "${line}" =~ $ti_regexp ]]; then
-            echo "); ${line}"
-        else
-            echo "${line}"
-        fi
-    done < "$1"
-}
