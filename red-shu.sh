@@ -13,8 +13,7 @@ if [[ "$1" =~ ^/ ]]; then # Already real path
 else
     SPEC_SOURCE=$(realpath "$1")
 fi
-CMD=${SPEC_SOURCE/.spec.sh/.sh}
-SHORT_CMD=$(basename "${CMD}")
+CMD="${SPEC_SOURCE/.spec.sh/.sh}"
 
 source red-shu-internals.sh
 source red-shu-mock.sh
@@ -22,16 +21,14 @@ source red-shu-mock.sh
 redshu::setup; mock::setup
 trap 'redshu::teardown; mock::teardown' EXIT
 
-CASE_N=0
-CASE_FAIL_COUNT=0
+export CASE_N=0
+export CASE_FAIL_COUNT=0
 
 function log() {
     local event_type=$1
     shift
     local requirement="$*"
-    local timestamp
-    timestamp=$(date +%Y-%m-%dT%H:%M:%S%z)
-    echo REDSHU "$event_type" "${timestamp}" "${SHORT_CMD}" "${CASE_N}" "${requirement}"
+    redshu::log "$event_type" "${CASE_N}" "${requirement}"
 }
 
 function it() {
