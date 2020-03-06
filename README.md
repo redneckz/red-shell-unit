@@ -18,12 +18,17 @@ Requires Bash v4
 * Mock API
 * Parsable output
 * JUnit report format
+* Coverage (experimental)
 
 ## Setup
 
 ```sh
-curl -sL https://github.com/redneckz/red-shell-unit/tarball/<version> | tar -xzv
-# Add to PATH
+# Framework folder
+mkdir "${DIR_OF_YOUR_CHOICE}"
+# Download particular version and extract
+curl -sL https://github.com/redneckz/red-shell-unit/tarball/"${TAG}" | tar -xzv --strip-components=1 -C "${DIR_OF_YOUR_CHOICE}"
+# Add to PATH (or permanently update /etc/environment)
+PATH+=:"${DIR_OF_YOUR_CHOICE}"
 ```
 
 ## Usage
@@ -32,7 +37,7 @@ add.sh
 ```sh
 #!/usr/bin/env bash
 
-echo $(($1 + $2))
+echo $(( $1 + $2 ))
 ```
 
 add.spec.sh
@@ -62,7 +67,19 @@ $ add.spec.sh | red-shu-2-junit.sh
 
 Run all tests in folder
 ```sh
-$ red-shu-exec.sh --junit
+$ red-shu-exec.sh --junit ./junit.xml
+```
+
+Compute coverage
+```sh
+$ red-shu-exec.sh --cov
+# REDSHU COV 2020-03-05T23:13:22+0300 red-shu-cov.sh 5/5
+```
+
+Fail if line coverage level is lower than 70%
+```sh
+$ red-shu-exec.sh --cov --th 70
+# REDSHU COV_FAIL 2020-03-05T23:13:22+0300 red-shu-cov.sh 2/5
 ```
 
 ## Assertions

@@ -1,14 +1,7 @@
 #!/usr/bin/env bash
 set +e
 
-if realpath "$0" &>/dev/null; then
-    # Add framework folder to PATH
-    RED_SHU=$(realpath "$0")
-    RED_SHU_DIR=$(dirname "$RED_SHU")
-    PATH+=":${RED_SHU_DIR}";
-fi
-
-if [[ "$1" =~ ^/ ]]; then # Already real path
+if [[ "$1" =~ ^/ ]]; then # Absolute path
     SPEC_SOURCE="$1"
 else
     SPEC_SOURCE=$(realpath "$1")
@@ -16,10 +9,11 @@ fi
 CMD="${SPEC_SOURCE/.spec.sh/.sh}"
 
 source red-shu-internals.sh
+source red-shu-cov.sh
 source red-shu-mock.sh
 
-redshu::setup; mock::setup
-trap 'redshu::teardown; mock::teardown' EXIT
+redshu::setup; cov::setup; mock::setup
+trap 'redshu::teardown; cov::teardown; mock::teardown' EXIT
 
 export CASE_N=0
 export CASE_FAIL_COUNT=0
@@ -47,9 +41,14 @@ function ti() {
 }
 
 function run() {
-    (source "${CMD}")
+    if [[ -n "${REDSHU_COV}" ]]; then
+        source <(cov::apply "${CMD}")
+    else
+        source "${CMD}"
+    fi
 }
 
 source <(red-shu-isolate.sh "${SPEC_SOURCE}")
 
-[[ ${CASE_FAIL_COUNT} -eq 0 ]] # In case of success exit with zero
+# In case of success exit with zero
+cov::assert "${CMD}" && [[ ${CASE_FAIL_COUNT} -eq 0 ]]
