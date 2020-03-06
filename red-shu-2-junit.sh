@@ -5,7 +5,7 @@
 source red-shu-parser.sh
 source sh-xml.sh
 
-TEST_REPORT_TITLE=${TEST_REPORT_TITLE:-CI Tests}
+REDSHU_TEST_REPORT_TITLE=${REDSHU_TEST_REPORT_TITLE:-Tests}
 
 declare -A test_suites
 declare -A test_suites_timestamp
@@ -52,7 +52,7 @@ function junit::register_time() {
 }
 
 function junit::render_report() {
-    xml::tag testsuites name "${TEST_REPORT_TITLE}" < <(
+    xml::tag testsuites name "${REDSHU_TEST_REPORT_TITLE}" < <(
         for suite_name in "${!test_suites[@]}"; do
             junit::render_test_suite "$suite_name"
         done

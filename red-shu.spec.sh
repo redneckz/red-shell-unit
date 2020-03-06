@@ -1,4 +1,4 @@
-#!./red-shu.sh
+#!/usr/bin/env red-shu.sh
 
 function spec() {
     output=$(run <(cat "$@"))
@@ -28,13 +28,13 @@ ti
 it should output parsable lines REDSHU CASE for each requirement
     # Act
     spec <<EOF
-it should do first
+it should be first
     # Arrange, Act, Assert
 ti
-it should do second
+it should be second
     # Arrange, Act, Assert
 ti
-it should do third
+it should be third
     # Arrange, Act, Assert
 ti
 EOF
@@ -45,7 +45,7 @@ ti
 it should output parsable lines REDSHU PASS for each passed requirement
     # Act
     spec <<EOF
-it should do successfully
+it should be successful
     # Arrange, Act, Assert
 ti
 EOF
