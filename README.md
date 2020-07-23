@@ -104,7 +104,7 @@ diff ./file.txt <(printf '%s\n' 'first line' 'second line' 'third line')
 
 ## Mocks
 
-Default mock: 
+Default mock:
 ```sh
 mock yarn
 ```
@@ -134,6 +134,16 @@ mock::called yarn '.*' # Assert that command was called with any args (RegExp)
     yarn version
     yarn install
 )
+```
+
+### Mock stdin
+
+```
+mock::stdin wc
+# Act
+run
+# Assert
+mock::consumed wc "some line"
 ```
 
 [build-image]: https://cloud.drone.io/api/badges/redneckz/red-shell-unit/status.svg

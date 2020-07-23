@@ -21,6 +21,14 @@ function mock::reset() {
     true > "${CMD_MOCKS_LOG}"
 }
 
+function mock::consumed() {
+    local cmd="$1"
+    local stdin_line="$2"
+    local target="${cmd}_stdin ${stdin_line}"
+
+    [[ $(mock::called_times "${target}") -gt 0 ]]
+}
+
 function mock::called() {
     [[ $(mock::called_times "$@") -gt 0 ]]
 }
@@ -35,4 +43,9 @@ function mock::snapshot() {
     CMD_SNAP_LOG="${CMD_MOCKS_LOG}"
     CMD_MOCKS_LOG=$(mktemp)
     trap 'diff -bB "${CMD_SNAP_LOG}" "${CMD_MOCKS_LOG}"; DIFF_RES=$?; rm -f "${CMD_MOCKS_LOG}"; exit $DIFF_RES' EXIT
+}
+
+function mock::stdin() {
+    local cmd_name="$1"
+    eval "function ${cmd_name}() { while read -r line; do mock::log ${cmd_name}_stdin" '"${line}";' "done; }"
 }
